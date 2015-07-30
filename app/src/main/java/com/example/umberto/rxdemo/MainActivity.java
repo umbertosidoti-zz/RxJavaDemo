@@ -10,6 +10,8 @@ import android.widget.EditText;
 
 import rx.Observable;
 import rx.Subscriber;
+import rx.functions.Action;
+import rx.functions.Action1;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,29 +29,12 @@ public class MainActivity extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myObservable.subscribe(mySubscriber);
+//                can be myObservable.subscribe(onNextAction,onErrorAction, onCompleteAction);
+                myObservable.subscribe(onNextAction);
             }
         });
 
     }
-
-
-    final Subscriber<String> mySubscriber=new Subscriber<String>() {
-        @Override
-        public void onCompleted() {
-
-        }
-
-        @Override
-        public void onError(Throwable e) {
-
-        }
-
-        @Override
-        public void onNext(String s) {
-            t.setText(s);
-        }
-    };
 
 
     private final Observable<String> myObservable= Observable.create(new Observable.OnSubscribe<String>() {
@@ -60,6 +45,16 @@ public class MainActivity extends ActionBarActivity {
             subscriber.onCompleted();
         }
     });
+
+    Action1<String> onNextAction = new Action1<String>() {
+        @Override
+        public void call(String s) {
+            t.setText(s);
+        }
+    };
+
+
+
 
 
     @Override
