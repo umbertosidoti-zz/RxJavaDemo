@@ -8,9 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import rx.Observable;
 import rx.Subscriber;
-import rx.functions.Action;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -18,6 +20,9 @@ import rx.functions.Func1;
 public class MainActivity extends ActionBarActivity {
 
     EditText t;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,36 +32,53 @@ public class MainActivity extends ActionBarActivity {
         t= (EditText) findViewById(R.id.editText);
 
 
+
+
+
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                can be myObservable.subscribe(onNextAction,onErrorAction, onCompleteAction);
-                myObservable.map(mapFunction)
+                //flatMap takes the emissions of one Observable and returns the emissions of another Observable
+                getFakeListOfUrlLikeAnService()
+                        .flatMap(convertLisToString)
+                        .map(mapFunction)
                         .subscribe(onNextAction);
             }
         });
     }
 
-    private final Observable<String> myObservable= Observable.create(new Observable.OnSubscribe<String>() {
-        @Override
-        public void call(Subscriber<? super String> subscriber) {
+    private Observable<ArrayList<String>> getFakeListOfUrlLikeAnService(){
 
-            subscriber.onNext("HelloWord");
-            subscriber.onCompleted();
-        }
-    });
+        ArrayList<String> demoUrl= new ArrayList<>(4);
 
-    Action1<String> onNextAction = new Action1<String>() {
+        demoUrl.add("www.demourl1.com");
+        demoUrl.add("www.demourl2.com");
+        demoUrl.add("www.demourl3.com");
+        demoUrl.add("www.demourl4.com");
+
+        return Observable.just(demoUrl);
+    }
+
+    private final Action1<String> onNextAction = new Action1<String>() {
         @Override
         public void call(String s) {
-            t.setText(s);
+            t.append(s);
         }
     };
 
-    Func1<String,String> mapFunction= new Func1<String, String>() {
+    private final Func1<List<String>,Observable<String>> convertLisToString= new Func1<List<String>, Observable<String>>() {
+        @Override
+        public Observable<String> call(List<String> urls) {
+
+//          Observable.from(urls); that takes a collection of items and emits each them one at a time
+            return Observable.from(urls);
+        }
+    };
+
+    private final Func1<String,String> mapFunction= new Func1<String, String>() {
         @Override
         public String call(String s) {
-            return s + " -with map";
+            return s + " -with map \n";
         }
     };
 
