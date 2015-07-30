@@ -12,6 +12,7 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Action;
 import rx.functions.Action1;
+import rx.functions.Func1;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -30,12 +31,11 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
 //                can be myObservable.subscribe(onNextAction,onErrorAction, onCompleteAction);
-                myObservable.subscribe(onNextAction);
+                myObservable.map(mapFunction)
+                        .subscribe(onNextAction);
             }
         });
-
     }
-
 
     private final Observable<String> myObservable= Observable.create(new Observable.OnSubscribe<String>() {
         @Override
@@ -53,9 +53,12 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-
-
-
+    Func1<String,String> mapFunction= new Func1<String, String>() {
+        @Override
+        public String call(String s) {
+            return s + " -with map";
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
