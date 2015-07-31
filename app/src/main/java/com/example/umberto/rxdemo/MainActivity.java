@@ -19,15 +19,12 @@ public class MainActivity extends ActionBarActivity {
 
     EditText t;
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button b= (Button) findViewById(R.id.button);
-        t= (EditText) findViewById(R.id.editText);
+        Button b = (Button) findViewById(R.id.button);
+        t = (EditText) findViewById(R.id.editText);
 
 
         b.setOnClickListener(new View.OnClickListener() {
@@ -44,15 +41,12 @@ public class MainActivity extends ActionBarActivity {
         });
     }
 
-
-
     private final Action1<String> onNextAction = new Action1<String>() {
         @Override
         public void call(String s) {
             t.append(s);
         }
     };
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -72,7 +66,6 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

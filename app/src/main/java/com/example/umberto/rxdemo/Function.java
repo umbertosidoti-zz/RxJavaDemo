@@ -8,9 +8,9 @@ import rx.functions.Func1;
 public class Function {
 
 
-    public static Func1<List<String>,Observable<String>> getFunctionConvertListToStringFunction(){
+    public static Func1<List<String>, Observable<String>> getFunctionConvertListToStringFunction() {
 
-        return  new Func1<List<String>, Observable<String>>() {
+        return new Func1<List<String>, Observable<String>>() {
             @Override
             public Observable<String> call(List<String> urls) {
 
@@ -20,7 +20,7 @@ public class Function {
         };
     }
 
-    public static Func1<String,String> getFunctionMapUrl(){
+    public static Func1<String, String> getFunctionMapUrl() {
 
         return new Func1<String, String>() {
             @Override
@@ -30,7 +30,7 @@ public class Function {
         };
     }
 
-    public static Func1<String,Observable<String>> getFunctionForGetPayload(){
+    public static Func1<String, Observable<String>> getFunctionForGetPayload() {
 
         return new Func1<String, Observable<String>>() {
             @Override
