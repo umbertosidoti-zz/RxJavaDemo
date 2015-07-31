@@ -40,4 +40,12 @@ public class Function {
         };
     }
 
+    public static Func1<? super String, Boolean> getFunctionFilterNullValue() {
+        return new Func1<String, Boolean>() {
+            @Override
+            public Boolean call(String s) {
+                return !s.equals("null");
+            }
+        };
+    }
 }

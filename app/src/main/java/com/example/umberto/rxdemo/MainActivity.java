@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity {
                 //flatMap takes the emissions of one Observable and returns the emissions of another Observable
                 MockServerCall.getListOfUrl()
                         .flatMap(Function.getFunctionConvertListToStringFunction())
+                        .filter(Function.getFunctionFilterNullValue())
                         .flatMap(Function.getFunctionForGetPayload())
                         .map(Function.getFunctionMapUrl())
                         .subscribe(onNextAction);

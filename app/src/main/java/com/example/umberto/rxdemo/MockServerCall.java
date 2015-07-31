@@ -13,7 +13,7 @@ public class MockServerCall {
         ArrayList<String> demoUrl= new ArrayList<>(4);
 
         demoUrl.add("www.demourl1.com");
-        demoUrl.add("www.demourl2.com");
+        demoUrl.add("null");
         demoUrl.add("www.demourl3.com");
         demoUrl.add("www.demourl4.com");
 
