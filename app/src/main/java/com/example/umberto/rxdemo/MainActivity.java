@@ -10,7 +10,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import rx.Scheduler;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -33,12 +36,13 @@ public class MainActivity extends ActionBarActivity {
 //              flatMap() takes the emissions of one Observable and returns the emissions of another Observable
 //              doOnNext() allows us to add extra behavior each time an item is emitted, in this case saving the payload.
                 MockServerCall.getListOfUrl()
+                        .subscribeOn(Schedulers.newThread())
                         .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
                         .filter(FunctionAndAction.getFunctionFilterNullValue())
-                        .map(FunctionAndAction.getFunctionWithPotentialException())
                         .flatMap(FunctionAndAction.getFunctionForGetPayload())
                         .doOnNext(FunctionAndAction.getActionSaveInDb())
                         .map(FunctionAndAction.getFunctionMapUrl())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(onNextAction, onErrorAction);
             }
         });

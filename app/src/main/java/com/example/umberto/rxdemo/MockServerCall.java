@@ -12,7 +12,6 @@ public class MockServerCall {
         demoUrl.add("www.demourl1.com");
         demoUrl.add("null");
         demoUrl.add("www.demourl3.com");
-        demoUrl.add("testerror");
         demoUrl.add("www.demourl4.com");
 
         return Observable.just(demoUrl);
@@ -23,6 +22,14 @@ public class MockServerCall {
         StringBuilder builder = new StringBuilder(url);
         builder.append("+");
         builder.append("payload");
+
+
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+
+
+        }
         return Observable.just(builder.toString());
     }
 }
