@@ -1,11 +1,14 @@
 package com.example.umberto.rxdemo;
 
+import android.util.Log;
+
 import java.util.List;
 
 import rx.Observable;
+import rx.functions.Action1;
 import rx.functions.Func1;
 
-public class Function {
+public class FunctionAndAction {
 
 
     public static Func1<List<String>, Observable<String>> getFunctionConvertListToStringFunction() {
@@ -45,6 +48,15 @@ public class Function {
             @Override
             public Boolean call(String s) {
                 return !s.equals("null");
+            }
+        };
+    }
+
+    public static Action1<? super String> getActionSaveInDb() {
+        return new Action1<String>() {
+            @Override
+            public void call(String s) {
+                Log.w("DB","Store in db");
             }
         };
     }

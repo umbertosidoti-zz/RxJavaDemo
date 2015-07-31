@@ -8,11 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.List;
-
-import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -30,12 +26,16 @@ public class MainActivity extends ActionBarActivity {
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //flatMap takes the emissions of one Observable and returns the emissions of another Observable
+//              flatMap() takes the emissions of one Observable and returns the emissions of another Observable to take its place
+//              filter() emits the same item it received, but only if it passes the boolean check.
+//              flatMap() takes the emissions of one Observable and returns the emissions of another Observable
+//              doOnNext() allows us to add extra behavior each time an item is emitted, in this case saving the payload.
                 MockServerCall.getListOfUrl()
-                        .flatMap(Function.getFunctionConvertListToStringFunction())
-                        .filter(Function.getFunctionFilterNullValue())
-                        .flatMap(Function.getFunctionForGetPayload())
-                        .map(Function.getFunctionMapUrl())
+                        .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
+                        .filter(FunctionAndAction.getFunctionFilterNullValue())
+                        .flatMap(FunctionAndAction.getFunctionForGetPayload())
+                        .doOnNext(FunctionAndAction.getActionSaveInDb())
+                        .map(FunctionAndAction.getFunctionMapUrl())
                         .subscribe(onNextAction);
             }
         });
