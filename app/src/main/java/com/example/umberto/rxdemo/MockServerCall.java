@@ -12,6 +12,7 @@ public class MockServerCall {
         demoUrl.add("www.demourl1.com");
         demoUrl.add("null");
         demoUrl.add("www.demourl3.com");
+        demoUrl.add("testerror");
         demoUrl.add("www.demourl4.com");
 
         return Observable.just(demoUrl);

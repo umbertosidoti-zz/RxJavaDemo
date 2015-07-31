@@ -60,4 +60,14 @@ public class FunctionAndAction {
             }
         };
     }
+
+    public static Func1<String, String> getFunctionWithPotentialException(){
+        return new Func1<String, String>() {
+            @Override
+            public String call(String s){
+                if(s.equals("testerror"))return null;
+                return s;
+            }
+        };
+    }
 }

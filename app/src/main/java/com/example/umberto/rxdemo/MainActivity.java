@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import rx.functions.Action1;
 
@@ -34,10 +35,11 @@ public class MainActivity extends ActionBarActivity {
                 MockServerCall.getListOfUrl()
                         .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
                         .filter(FunctionAndAction.getFunctionFilterNullValue())
+                        .map(FunctionAndAction.getFunctionWithPotentialException())
                         .flatMap(FunctionAndAction.getFunctionForGetPayload())
                         .doOnNext(FunctionAndAction.getActionSaveInDb())
                         .map(FunctionAndAction.getFunctionMapUrl())
-                        .subscribe(onNextAction,onErrorAction);
+                        .subscribe(onNextAction, onErrorAction);
             }
         });
     }
@@ -52,12 +54,10 @@ public class MainActivity extends ActionBarActivity {
     private final Action1<java.lang.Throwable> onErrorAction = new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
+            Toast.makeText(MainActivity.this,throwable.getMessage(),Toast.LENGTH_SHORT).show();
             Log.e("ERROR",throwable.getMessage());
         }
     };
-
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
