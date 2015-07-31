@@ -2,6 +2,7 @@ package com.example.umberto.rxdemo;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
                         .flatMap(FunctionAndAction.getFunctionForGetPayload())
                         .doOnNext(FunctionAndAction.getActionSaveInDb())
                         .map(FunctionAndAction.getFunctionMapUrl())
-                        .subscribe(onNextAction);
+                        .subscribe(onNextAction,onErrorAction);
             }
         });
     }
@@ -47,6 +48,16 @@ public class MainActivity extends ActionBarActivity {
             t.append(s);
         }
     };
+
+    private final Action1<java.lang.Throwable> onErrorAction = new Action1<Throwable>() {
+        @Override
+        public void call(Throwable throwable) {
+            Log.e("ERROR",throwable.getMessage());
+        }
+    };
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
