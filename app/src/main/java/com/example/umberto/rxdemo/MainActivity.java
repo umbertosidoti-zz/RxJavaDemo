@@ -8,11 +8,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -32,32 +30,20 @@ public class MainActivity extends ActionBarActivity {
         t= (EditText) findViewById(R.id.editText);
 
 
-
-
-
         b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //flatMap takes the emissions of one Observable and returns the emissions of another Observable
-                getFakeListOfUrlLikeAnService()
-                        .flatMap(convertLisToString)
-                        .map(mapFunction)
+                MockServerCall.getListOfUrl()
+                        .flatMap(Function.getFunctionConvertListToStringFunction())
+                        .flatMap(Function.getFunctionForGetPayload())
+                        .map(Function.getFunctionMapUrl())
                         .subscribe(onNextAction);
             }
         });
     }
 
-    private Observable<ArrayList<String>> getFakeListOfUrlLikeAnService(){
 
-        ArrayList<String> demoUrl= new ArrayList<>(4);
-
-        demoUrl.add("www.demourl1.com");
-        demoUrl.add("www.demourl2.com");
-        demoUrl.add("www.demourl3.com");
-        demoUrl.add("www.demourl4.com");
-
-        return Observable.just(demoUrl);
-    }
 
     private final Action1<String> onNextAction = new Action1<String>() {
         @Override
@@ -66,21 +52,6 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
-    private final Func1<List<String>,Observable<String>> convertLisToString= new Func1<List<String>, Observable<String>>() {
-        @Override
-        public Observable<String> call(List<String> urls) {
-
-//          Observable.from(urls); that takes a collection of items and emits each them one at a time
-            return Observable.from(urls);
-        }
-    };
-
-    private final Func1<String,String> mapFunction= new Func1<String, String>() {
-        @Override
-        public String call(String s) {
-            return s + " -with map \n";
-        }
-    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
