@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import rx.Scheduler;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
@@ -18,7 +19,8 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends ActionBarActivity {
 
-    EditText t;
+    private EditText t;
+    private Subscription subscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
 //              filter() emits the same item it received, but only if it passes the boolean check.
 //              flatMap() takes the emissions of one Observable and returns the emissions of another Observable
 //              doOnNext() allows us to add extra behavior each time an item is emitted, in this case saving the payload.
-                MockServerCall.getListOfUrl()
+                subscription=MockServerCall.getListOfUrl()
                         .subscribeOn(Schedulers.newThread())
                         .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
                         .filter(FunctionAndAction.getFunctionFilterNullValue())
@@ -46,6 +48,13 @@ public class MainActivity extends ActionBarActivity {
                         .subscribe(onNextAction, onErrorAction);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(subscription!=null)
+            subscription.unsubscribe();
     }
 
     private final Action1<String> onNextAction = new Action1<String>() {
