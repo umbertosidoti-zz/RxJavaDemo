@@ -13,6 +13,8 @@ import android.widget.Toast;
 import rx.Scheduler;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.android.view.OnClickEvent;
+import rx.android.view.ViewObservable;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
@@ -28,32 +30,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         Button b = (Button) findViewById(R.id.button);
         t = (EditText) findViewById(R.id.editText);
-
-
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//              flatMap() takes the emissions of one Observable and returns the emissions of another Observable to take its place
-//              filter() emits the same item it received, but only if it passes the boolean check.
-//              flatMap() takes the emissions of one Observable and returns the emissions of another Observable
-//              doOnNext() allows us to add extra behavior each time an item is emitted, in this case saving the payload.
-                subscription=MockServerCall.getListOfUrl()
-                        .subscribeOn(Schedulers.newThread())
-                        .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
-                        .filter(FunctionAndAction.getFunctionFilterNullValue())
-                        .flatMap(FunctionAndAction.getFunctionForGetPayload())
-                        .doOnNext(FunctionAndAction.getActionSaveInDb())
-                        .map(FunctionAndAction.getFunctionMapUrl())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(onNextAction, onErrorAction);
-            }
-        });
+        ViewObservable.clicks(b).subscribe(clickViewAction);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(subscription!=null)
+        if (subscription != null)
             subscription.unsubscribe();
     }
 
@@ -64,11 +47,29 @@ public class MainActivity extends ActionBarActivity {
         }
     };
 
+    Action1<? super OnClickEvent> clickViewAction = new Action1<OnClickEvent>() {
+        @Override
+        public void call(OnClickEvent onClickEvent) {
+            //flatMap() takes the emissions of one Observable and returns the emissions of another Observable to take its place
+            //filter() emits the same item it received, but only if it passes the boolean check.
+            //doOnNext() allows us to add extra behavior each time an item is emitted, in this case saving the payload.
+            subscription = MockServerCall.getListOfUrl()
+                    .subscribeOn(Schedulers.newThread())
+                    .flatMap(FunctionAndAction.getFunctionConvertListToStringFunction())
+                    .filter(FunctionAndAction.getFunctionFilterNullValue())
+                    .flatMap(FunctionAndAction.getFunctionForGetPayload())
+                    .doOnNext(FunctionAndAction.getActionSaveInDb())
+                    .map(FunctionAndAction.getFunctionMapUrl())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(onNextAction, onErrorAction);
+        }
+    };
+
     private final Action1<java.lang.Throwable> onErrorAction = new Action1<Throwable>() {
         @Override
         public void call(Throwable throwable) {
-            Toast.makeText(MainActivity.this,throwable.getMessage(),Toast.LENGTH_SHORT).show();
-            Log.e("ERROR",throwable.getMessage());
+            Toast.makeText(MainActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.e("ERROR", throwable.getMessage());
         }
     };
 
